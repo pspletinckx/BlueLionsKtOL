@@ -1,0 +1,33 @@
+<div class="well">
+<h1>Match Status: {{matchStatus}}</h1>
+<h2>{{gameMode}}</h2>
+</div>
+<div class="well col-xs-5">
+  <h2>{{teamNameA}} - {{getTotal("killsA")}}</h2>
+  <table class="table">
+    <thead><th>Team A</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
+    <tbody ng-repeat="player in teamA">
+      <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="well col-xs-5 col-xs-offset-2">
+  <h2>{{teamNameB}} - {{getTotal("killsB")}}</h2>
+  <table class="table">
+    <thead><th>Team B</th><th>{{getTotal("killsB")}}</th><th>{{getTotal("deathsB")}}</th></thead>
+    <tbody ng-repeat="player in teamB">
+      <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
+    </tbody>
+  </table>
+</div>
+<div class="well col-xs-6 col-xs-offset-3">
+  <table class = "table" >
+    <tbody ng-repeat="record in killspam">
+       <tr> <td>{{record.time}} {{record.killer}} has killed {{record.target}} with a {{record.weapon}} {{$index}}</td></tr>
+    </tbody>
+   
+  </table>
+  <h2>{{killspam}}</h2>
+  
+</div>
+
