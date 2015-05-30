@@ -116,6 +116,28 @@ angular.module('statelessScoreboardApp')
 		deaths: 6	
 	}];
 
+    $scope.lookuptable = new Map ([
+        [5428010618035982689,"Bullet0Storm"]
+        ]);
+
+    var buildPlayersIndex = function(){
+        $http.jsonp('https://census.daybreakgames.com/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        .success(function(data){
+            var members = data.outfit_list[0].members;
+        console.log(members.length+" Members returned");
+
+        for (var i = members.length - 1; i >= 0; i--) {
+            var member = members[i];
+            if (member.name != null){
+            console.log(member.character_id +" "+member.name.first);
+            $scope.lookuptable.set(member.character_id, member.name.first);
+            };
+        };
+        
+    });
+    };
+
+    buildPlayersIndex();
     var getIdNumbers = function(){};
     //http://census.daybreakgames.com/get/ps2:v2/character/?name.first=Bullet0Storm&c:show=name,faction_id,battle_rank,characterid
     var updateTeamA = function(){};
