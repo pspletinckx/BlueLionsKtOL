@@ -24,7 +24,7 @@
 <div class="well col-xs-9 col-xs-offset-2">
   <table class = "table" >
     <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'">
-       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'medium'}}</td><td>{{record.killer}} has killed {{lookuptable.get(record.target)}} with a {{record.weapon}} </td></tr>
+       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'short'}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a {{record.weapon}} </td></tr>
     </tbody>
    
   </table>
@@ -34,8 +34,8 @@
 <div class = "row">
   <div class="col-xs-12"> 
   <h2> Debug 1: Lookup Table</h2>
-  <p>{{resolvePlayer(5428010618035982689)}}</p>
-  <p>{{resolvePlayer(5428072203475182257)}}</p>
+  <p>{{lookuptable.get(5428010618035982689)}}</p>
+  <p>{{lookuptable.get(5428147970869687073)}}</p>
   
   </div>
 
