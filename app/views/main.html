@@ -21,21 +21,22 @@
   </table>
 </div>
 
-<div class="well col-xs-6 col-xs-offset-3">
+<div class="well col-xs-9 col-xs-offset-2">
   <table class = "table" >
-    <tbody ng-repeat="record in killspam">
-       <tr> <td>{{record.time}} {{record.killer}} has killed {{record.target}} with a {{record.weapon}} {{$index}}</td></tr>
+    <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'">
+       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'medium'}}</td><td>{{record.killer}} has killed {{lookuptable.get(record.target)}} with a {{record.weapon}} </td></tr>
     </tbody>
    
   </table>
-  <h2>{{killspam}}</h2>
   
 </div>
 
 <div class = "row">
   <div class="col-xs-12"> 
   <h2> Debug 1: Lookup Table</h2>
-  <p>{{lookuptable.get(5428010618035982689)}}</p>
+  <p>{{resolvePlayer(5428010618035982689)}}</p>
+  <p>{{resolvePlayer(5428072203475182257)}}</p>
+  
   </div>
 
   <div class="col-xs-12">

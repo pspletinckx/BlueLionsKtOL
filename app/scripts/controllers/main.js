@@ -8,13 +8,15 @@
  * Controller of the statelessScoreboardApp
  */
 angular.module('statelessScoreboardApp')
-  .controller('MainCtrl', function ($scope,$http) {
+  .controller('MainCtrl', function ($scope,$http,$interval) {
   	///presentation
     $scope.matchStatusEN = [
       'Ready to start',
       'Ongoing',
       'Finished'
     ];
+
+
     $scope.teamNameA = 'Generals';
     $scope.teamNameB = 'Lions';
     $scope.matchStatus  = 'Ready to start';
@@ -50,20 +52,15 @@ angular.module('statelessScoreboardApp')
     return total;
     };
 
-    $scope.killspam = [ //filtered body pile
-    {
-    	time:'00:00',
-    	killer:'Killer',
-    	target:'Killee',
-    	weapon:'Battleaxe'
-    },
-    {
-    	time:'00:00',
-    	killer:'Killer',
-    	target:'Killee',
-    	weapon:'Battleaxe'
-    }];
+    $scope.killspam = [];
 
+    $scope.getKillSpam = function(){
+        return $scope.killspam;
+    };
+    $scope.resolvePlayer = function(playerid){
+        return $scope.lookuptable;
+        //return promise
+    }
     $scope.teamA = [ //representational scoreboard
     {
     	name: 'Bullet0Storm',
@@ -121,7 +118,7 @@ angular.module('statelessScoreboardApp')
         ]);
 
     var buildPlayersIndex = function(){
-        $http.jsonp('https://census.daybreakgames.com/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
             var members = data.outfit_list[0].members;
         console.log(members.length+" Members returned");
@@ -129,7 +126,7 @@ angular.module('statelessScoreboardApp')
         for (var i = members.length - 1; i >= 0; i--) {
             var member = members[i];
             if (member.name != null){
-            console.log(member.character_id +" "+member.name.first);
+            //console.log(member.character_id +" "+member.name.first);
             $scope.lookuptable.set(member.character_id, member.name.first);
             };
         };
@@ -137,16 +134,33 @@ angular.module('statelessScoreboardApp')
     });
     };
 
-    buildPlayersIndex();
+    
+
     var getIdNumbers = function(){};
     //http://census.daybreakgames.com/get/ps2:v2/character/?name.first=Bullet0Storm&c:show=name,faction_id,battle_rank,characterid
     var updateTeamA = function(){};
 
-    var getStatelessData = function(characterid){
+    var timesExecuted = 0;
+
+    var getStatelessData = function(){
+        timesExecuted ++;
+        console.log(timesExecuted);
     	//http://census.daybreakgames.com/get/ps2:v2/characters_event/?character_id=5428010618020694593&c:limit=10&type=DEATH
-    	$http.jsonp('http://census.daybreakgames.com/get/ps2:v2/characters_event/?character_id=5428010618035982689&c:limit=10&type=DEATH&callback=JSON_CALLBACK')
+    	$http.jsonp('http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/characters_event/?character_id=5428010618035982689&c:limit=10&type=DEATH&callback=JSON_CALLBACK')
     	.success(function(data){
-    	console.log(data);
+            var events = data.characters_event_list;
+            for (var i = data.characters_event_list.length - 1; i >= 0; i--) {
+                $scope.killspam.push(
+                    {
+                        time:events[i].timestamp,
+                        killer:events[i].attacker_character_id,
+                        target:events[i].character_id,
+                        weapon:events[i].attacker_weapon_id
+
+                    });
+                //console.log(events[i]);
+            };
+    	//console.log(data);
     	
     });
 
@@ -156,8 +170,19 @@ angular.module('statelessScoreboardApp')
 
     	//push data to killspam
     };
-    setInterval(getStatelessData("Bullet0Storm"),10000);
 
+    buildPlayersIndex();
+    getStatelessData();
+
+
+    
+    $interval(function(){
+        console.log("Going for new loop");
+        //getStatelessData();
+    }
+    ,10000);
+    
+   
 
 
 });
