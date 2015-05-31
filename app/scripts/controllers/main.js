@@ -27,19 +27,11 @@ angular.module('statelessScoreboardApp')
         start : 1433093050666
     };
 
+    $scope.GeneralsTR = [];
+    $scope.GeneralsVS = [];
+    $scope.Lions = [];
 
-
-
-
-
-
-
-
-
-
-
-
-
+    $scope.GeneralsFilter="";
 
     //logic
 
@@ -95,9 +87,87 @@ angular.module('statelessScoreboardApp')
 		deaths: 6	
 	}];
 
+    //lookup index
+
     $scope.lookuptable = new Map ([
         [5428010618035982689,"Bullet0Storm"]
-        ]);
+    ]);
+
+    var addBlueLions = function(){
+        $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        .success(function(data){
+            var members = data.outfit_list[0].members;
+        console.log(members.length+" Members returned");
+
+        for (var i = members.length - 1; i >= 0; i--) {
+            var member = members[i];
+            if (member.name != null){
+            //console.log(member.character_id +" "+member.name.first);
+            $scope.lookuptable.set(member.character_id, member.name.first);
+                $scope.Lions.push(
+                {
+                    name: member.name.first,
+                    id: member.character_id,
+                    kills: 0,
+                    deaths: 0   
+                });
+            };
+        };
+    });
+    };
+    var addGeneralsTR = function(){
+        $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37525841087037762&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        .success(function(data){
+            var members = data.outfit_list[0].members;
+        console.log(members.length+" Members returned");
+
+        for (var i = members.length - 1; i >= 0; i--) {
+            var member = members[i];
+            if (member.name != null){
+            //console.log(member.character_id +" "+member.name.first);
+            $scope.lookuptable.set(member.character_id, member.name.first);
+            $scope.GeneralsFilter = $scope.GeneralsFilter+member.character_id+",";
+            console.log($scope.GeneralsFilter);
+
+
+
+                $scope.GeneralsTR.push(
+                {
+                    name: member.name.first,
+                    id: member.character_id,
+                    kills: 0,
+                    deaths: 0   
+                });
+            };
+        };
+    });
+    };
+
+    var addGeneralsVS = function(){
+        $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37525568521016410&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        .success(function(data){
+            var members = data.outfit_list[0].members;
+        console.log(members.length+" Members returned");
+
+        for (var i = members.length - 1; i >= 0; i--) {
+            var member = members[i];
+            if (member.name != null){
+            //console.log(member.character_id +" "+member.name.first);
+            $scope.lookuptable.set(member.character_id, member.name.first);
+                $scope.GeneralsVS.push(
+                {
+                    name: member.name.first,
+                    id: member.character_id,
+                    kills: 0,
+                    deaths: 0   
+                });
+            };
+        };
+    });
+    };
+
+
+
     // lookup index
 
     var addOutfitToIndex = function(){
@@ -113,7 +183,6 @@ angular.module('statelessScoreboardApp')
             $scope.lookuptable.set(member.character_id, member.name.first);
             };
         };
-        
     });
     };
 
@@ -143,18 +212,19 @@ angular.module('statelessScoreboardApp')
         });
     };
     
-    var getScoreData = function(){
+    var getScoreData = function(playerids){
         timesExecuted ++;
         console.log(timesExecuted);
         var timestamp = 1433084852; 
         var killspam =$scope.killspam
         if(killspam.length >0){
-            timestamp = $scope.killspam[$scope.killspam.length-1].time; //only get new
+            timestamp = $scope.killspam[$scope.killspam.length-1].time; //only get new events
         }
-        var playerids = "5428010618035982689,5428163811558091905,5428147970869687073"; //Bullet0Storm, Gr1mJ4w, RB21
+        //var playerids = "5428010618035982689,5428163811558091905,5428147970869687073"; //Bullet0Storm, Gr1mJ4w, RB21
         //http://census.daybreakgames.com/get/ps2:v2/characters_event/?character_id=5428010618020694593&c:limit=10&type=DEATH
         $http.jsonp('http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/characters_event/?character_id='+playerids+'&c:limit=100&type=DEATH&after='+timestamp+'&callback=JSON_CALLBACK')
         .success(function(data){
+            console.log(data);
             var events = data.characters_event_list;
             for (var i = data.characters_event_list.length - 1; i >= 0; i--) {
                 $scope.killspam.push(
@@ -169,14 +239,17 @@ angular.module('statelessScoreboardApp')
         });
     };
 
-    addOutfitToIndex();
+    //addOutfitToIndex();
     //getStatelessData();
-    getScoreData();
+    //getScoreData();
+    addBlueLions();
+    addGeneralsTR();
+    //addGeneralsVS();
     //addOutfitToIndex();
 
     $interval(function(){
         console.log("Going for new loop");
-        getScoreData();
+        getScoreData($scope.GeneralsFilter);
     }
     ,10000);
 });
