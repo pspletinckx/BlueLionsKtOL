@@ -1,12 +1,5 @@
 # stateless-scoreboard
 
-This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
-version 0.11.1.
+This is a scoreboard for the "Kill the outfit leader" and "generals hun" events organized by blue lions in a game called planetside.
 
-## Build & development
 
-Run `grunt` for building and `grunt serve` for preview.
-
-## Testing
-
-Running `grunt test` will run the unit tests with karma.
