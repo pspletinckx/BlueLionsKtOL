@@ -1,0 +1,4 @@
+<div class="well">
+<h1>Match Status: {{matchStatus}}</h1>
+<h2>{{gameMode}}</h2>
+</div>

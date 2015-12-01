@@ -8,7 +8,7 @@
  * Controller of the statelessScoreboardApp
  */
 angular.module('statelessScoreboardApp')
-  .controller('MainCtrl', function ($scope,$http,$interval, $filter) {
+  .controller('MainCtrl', function ($scope,$http,$interval, $filter,daybreakOutfits) {
   	///presentation
     $scope.matchStatusEN = [
       'Ready to start',
@@ -16,15 +16,14 @@ angular.module('statelessScoreboardApp')
       'Finished'
     ];
 
-
     $scope.teamNameA = "Generals";
     $scope.teamNameB = "Lions";
     $scope.matchStatus  = "Ready to start";
     $scope.gameMode = "Adversial - Time";
     $scope.gameModeRules ="Killing a member of the opposing team earns you a ticket to victory. Team with most tickets after the match wins";
     
-    var match = {
-        start : 1433093050666
+    $scope.match = {
+        start : 1433116800
     };
 
     $scope.GeneralsTR = [];
@@ -150,7 +149,7 @@ angular.module('statelessScoreboardApp')
     };
 
     var addGeneralsVS = function(){
-        $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37525568521016410&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
+        daybreakOutfits.outfitMembers("ABL")
         .success(function(data){
             var members = data.outfit_list[0].members;
         // console.log(members.length+" Members returned");
@@ -189,7 +188,7 @@ angular.module('statelessScoreboardApp')
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
             var members = data.outfit_list[0].members;
-        console.log(members.length+" Members returned");
+        //console.log(members.length+" Members returned");
 
         for (var i = members.length - 1; i >= 0; i--) {
             var member = members[i];
@@ -209,7 +208,7 @@ angular.module('statelessScoreboardApp')
     
     var getScoreData = function(playerids){
         timesExecuted ++;
-        console.log(timesExecuted);
+        //console.log(timesExecuted);
         var timestamp = 1433116800; //event time
         var killspam =$scope.killspam
         if(killspam.length >0){
@@ -235,7 +234,7 @@ angular.module('statelessScoreboardApp')
                 };
                 
             };
-            console.log(data.returned+" records returned");
+            //console.log(data.returned+" records returned");
         });
     };
     var timestamp=0;
@@ -257,8 +256,8 @@ angular.module('statelessScoreboardApp')
                 var matchKiller=$scope.killspam[i].killer;
                 var matchTarget=$scope.killspam[i].target;
             if(($scope.lookuptable.get(matchKiller)!=null)&&($scope.lookuptable.get(matchTarget))!=null){
-                console.log(matchKiller);
-                console.log(matchTarget);
+                //console.log(matchKiller);
+                //console.log(matchTarget);
                 for (var l = $scope.Lions.length - 1; l >= 0; l--) {
                     if($scope.Lions[l].id == matchKiller) $scope.Lions[l].kills ++;
                     if($scope.Lions[l].id == matchTarget) $scope.Lions[l].deaths ++;
@@ -280,6 +279,20 @@ angular.module('statelessScoreboardApp')
         return (player.kills>0||player.deaths>0);
     };
 
+    // $scope.clockTime = new Date();
+    // $scope.getGameClock = function (){
+    //     return $scope.clockTime;
+    // };
+    
+    // $scope.updateClock = function(){
+    //     $scope.clockTime = new Date();
+    //     $interval(function(){
+    //         $scope.updateClock();
+    //     }
+    //         ,1000);
+    // };
+    //$scope.updateClock();
+
     //addOutfitToIndex();
     //getStatelessData();
     //getScoreData();
@@ -289,10 +302,10 @@ angular.module('statelessScoreboardApp')
     //addOutfitToIndex();
 
     $interval(function(){
-        console.log("Going for new loop");
+        console.log("Going for new loop "+ new Date());
         UpdateScoreboard();
         getScoreData($scope.GeneralsFilter);
     }
-    ,2000);
+    ,5000);
 });
 

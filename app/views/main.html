@@ -1,7 +1,9 @@
 <div class="well">
+<h3>Next match: {{match.start+"000"| date:'d MMM y'}}</h3> 
 <h1>Match Status: {{matchStatus}}</h1>
-<h2>{{gameMode}}</h2>
+<h2>{{gameMode}} {{clockTime|date:'H:mm:ss'}}</h2>
 </div>
+
 
 <div class="col-sm-6 col-md-3 col-xs-offset-0"> <!-- begin left Column -->
   <h2>Team A</h2>
@@ -30,7 +32,7 @@
   <table class = "table" >
     <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'|filter:onlyRelevant">
 <!--       <tr ng-show="{{lookuptable.get(record.killer).length&&lookuptable.get(record.target).length}}"> -->
-       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'short'}}</td><td>{{lookuptable.get(record.killer)}}has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
+       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'short'}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
     </tbody>
    
   </table> 
@@ -62,4 +64,6 @@
   </div>
 </div>
 <h2> Refactoring....</h2>
-<team></team>
+<team side="A" outfit="CBL"></team>
+<!-- <team side="A" outfit="ABL"></team> -->
+<!-- <team side="B" outfit="BL"></team> -->
