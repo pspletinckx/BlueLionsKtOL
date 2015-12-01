@@ -8,7 +8,7 @@
  * Controller of the statelessScoreboardApp
  */
 angular.module('statelessScoreboardApp')
-  .controller('MainCtrl', function ($scope,$http,$interval) {
+  .controller('MainCtrl', function ($scope,$http,$interval, $filter) {
   	///presentation
     $scope.matchStatusEN = [
       'Ready to start',
@@ -17,11 +17,11 @@ angular.module('statelessScoreboardApp')
     ];
 
 
-    $scope.teamNameA = 'Generals';
-    $scope.teamNameB = 'Lions';
-    $scope.matchStatus  = 'Ready to start';
-    $scope.gameMode = 'Adversial - Time';
-    $scope.gameModeRules ='Killing a member of the opposing team earns you a ticket to victory. Team with most tickets after the match wins';
+    $scope.teamNameA = "Generals";
+    $scope.teamNameB = "Lions";
+    $scope.matchStatus  = "Ready to start";
+    $scope.gameMode = "Adversial - Time";
+    $scope.gameModeRules ="Killing a member of the opposing team earns you a ticket to victory. Team with most tickets after the match wins";
     
     var match = {
         start : 1433093050666
@@ -66,6 +66,7 @@ angular.module('statelessScoreboardApp')
     };
 
     $scope.killspam = [];
+    $scope.filtered = [];
 
     $scope.getKillSpam = function(){
         return $scope.killspam;
@@ -104,7 +105,7 @@ angular.module('statelessScoreboardApp')
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
             var members = data.outfit_list[0].members;
-        console.log(members.length+" Members returned");
+        // console.log(members.length+" Members returned");
 
         for (var i = members.length - 1; i >= 0; i--) {
             var member = members[i];
@@ -126,7 +127,7 @@ angular.module('statelessScoreboardApp')
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37525841087037762&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
             var members = data.outfit_list[0].members;
-        console.log(members.length+" Members returned");
+        // console.log(members.length+" Members returned");
 
         for (var i = members.length - 1; i >= 0; i--) {
             var member = members[i];
@@ -134,7 +135,7 @@ angular.module('statelessScoreboardApp')
             //console.log(member.character_id +" "+member.name.first);
             $scope.lookuptable.set(member.character_id, member.name.first);
             $scope.GeneralsFilter = $scope.GeneralsFilter+member.character_id+",";
-            console.log($scope.GeneralsFilter);
+            // console.log($scope.GeneralsFilter);
 
                 $scope.GeneralsTR.push(
                 {
@@ -152,7 +153,7 @@ angular.module('statelessScoreboardApp')
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37525568521016410&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
             var members = data.outfit_list[0].members;
-        console.log(members.length+" Members returned");
+        // console.log(members.length+" Members returned");
 
         for (var i = members.length - 1; i >= 0; i--) {
             var member = members[i];
@@ -161,7 +162,7 @@ angular.module('statelessScoreboardApp')
             $scope.lookuptable.set(member.character_id, member.name.first);
             $scope.GeneralsFilter = $scope.GeneralsFilter+member.character_id+",";
 
-            console.log($scope.GeneralsFilter);
+            // console.log($scope.GeneralsFilter);
                 $scope.GeneralsVS.push(
                 {
                     name: member.name.first,
@@ -174,6 +175,12 @@ angular.module('statelessScoreboardApp')
     });
     };
 
+    $scope.onlyRelevant = function(value, index, array){
+                 if ( $scope.lookuptable.has(value.killer)&&$scope.lookuptable.has(value.target)){
+                return true;
+        }
+        else return false;
+    }
 
 
     // lookup index
@@ -212,7 +219,7 @@ angular.module('statelessScoreboardApp')
         //http://census.daybreakgames.com/get/ps2:v2/characters_event/?character_id=5428010618020694593&c:limit=10&type=DEATH
         $http.jsonp('http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/characters_event/?character_id='+playerids+'&c:limit=1000&type=DEATH,KILL&after='+timestamp+'&callback=JSON_CALLBACK')
         .success(function(data){
-            console.log(data);
+            // console.log(data);
             var events = data.characters_event_list;
             for (var i = data.characters_event_list.length - 1; i >= 0; i--) {
                 $scope.killspam.push(
@@ -286,6 +293,6 @@ angular.module('statelessScoreboardApp')
         UpdateScoreboard();
         getScoreData($scope.GeneralsFilter);
     }
-    ,5000);
+    ,2000);
 });
 
