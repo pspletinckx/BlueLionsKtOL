@@ -1,8 +1,8 @@
-<div class="well col-xs-3 col-xs-offset-1">
-  <h2>{{teamNameA}} - {{ScoreGenerals}}</h2>
+<div class="well col-sm-3 col-xs-offset-1">
+  <h2>{{teamName}} - {{teamScore}}</h2>
   <table class="table">
-    <thead><th>Team A</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
-    <tbody ng-repeat="player in GeneralsVS">
+    <thead><th>Team {{side}}</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
+    <tbody ng-repeat="player in memberlist">
       <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
     </tbody>
   </table>

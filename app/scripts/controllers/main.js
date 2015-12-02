@@ -99,7 +99,7 @@ angular.module('statelessScoreboardApp')
     $scope.lookuptable = new Map ([
         [5428010618035982689,"Bullet0Storm"]
     ]);
-
+    // For add directive
     var addBlueLions = function(){
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
         .success(function(data){
@@ -173,7 +173,7 @@ angular.module('statelessScoreboardApp')
         };
     });
     };
-
+    //scoreboard player filter
     $scope.onlyRelevant = function(value, index, array){
                  if ( $scope.lookuptable.has(value.killer)&&$scope.lookuptable.has(value.target)){
                 return true;
