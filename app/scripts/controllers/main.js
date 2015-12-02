@@ -15,6 +15,11 @@ angular.module('statelessScoreboardApp')
       'Ongoing',
       'Finished'
     ];
+    var buildingLookuptable = {
+        lionsDone: false,
+        generalsvs: false,
+        generalstr: false
+    }
 
     $scope.teamNameA = "Generals";
     $scope.teamNameB = "Lions";
@@ -35,7 +40,7 @@ angular.module('statelessScoreboardApp')
     $scope.ScoreGenerals=0;
     $scope.ScoreLions=0;
 
-    //logic
+    //logic for team totals
 
     $scope.getTotal = function(stat){ //totals compiler
     	var total = 0;
@@ -120,6 +125,8 @@ angular.module('statelessScoreboardApp')
                 });
             };
         };
+        buildingLookuptable.lionsDone = true;
+        everthingDone();
     });
     };
     var addGeneralsTR = function(){
@@ -145,6 +152,8 @@ angular.module('statelessScoreboardApp')
                 });
             };
         };
+        buildingLookuptable.generalstr = true;
+        everthingDone();
     });
     };
 
@@ -171,8 +180,11 @@ angular.module('statelessScoreboardApp')
                 });
             };
         };
+        buildingLookuptable.generalsvs = true;
+        everthingDone();
     });
     };
+
     //scoreboard player filter
     $scope.onlyRelevant = function(value, index, array){
                  if ( $scope.lookuptable.has(value.killer)&&$scope.lookuptable.has(value.target)){
@@ -180,8 +192,6 @@ angular.module('statelessScoreboardApp')
         }
         else return false;
     }
-
-
     // lookup index
 
     var addOutfitToIndex = function(){
@@ -200,13 +210,14 @@ angular.module('statelessScoreboardApp')
     });
     };
 
-    var getIdNumbers = function(){};
-    //http://census.daybreakgames.com/get/ps2:v2/character/?name.first=Bullet0Storm&c:show=name,faction_id,battle_rank,characterid
-    var updateTeamA = function(){};
-
     var timesExecuted = 0;
-    
+    //required variables: killspam, playerids, lookuptable
+    //this downloads the killspam
+    //also calculates overall score
+    var lock = false;
     var getScoreData = function(playerids){
+        if (lock) return;
+        lock=true;
         timesExecuted ++;
         //console.log(timesExecuted);
         var timestamp = 1433116800; //event time
@@ -218,7 +229,7 @@ angular.module('statelessScoreboardApp')
         //http://census.daybreakgames.com/get/ps2:v2/characters_event/?character_id=5428010618020694593&c:limit=10&type=DEATH
         $http.jsonp('http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/characters_event/?character_id='+playerids+'&c:limit=1000&type=DEATH,KILL&after='+timestamp+'&callback=JSON_CALLBACK')
         .success(function(data){
-            // console.log(data);
+            console.log("response is here");
             var events = data.characters_event_list;
             for (var i = data.characters_event_list.length - 1; i >= 0; i--) {
                 $scope.killspam.push(
@@ -235,10 +246,15 @@ angular.module('statelessScoreboardApp')
                 
             };
             //console.log(data.returned+" records returned");
+            UpdateScoreboard();
+            lock = false;
         });
     };
+    //this pushes data from the killspam to the scoreboard
+    //required variables: killspam, lookuptable
     var timestamp=0;
     var UpdateScoreboard = function(){
+        //reset increment values to 0
         for (var l = $scope.Lions.length - 1; l >= 0; l--) {
                     $scope.Lions[l].kills =0;
                     $scope.Lions[l].deaths =0;
@@ -251,13 +267,13 @@ angular.module('statelessScoreboardApp')
                     $scope.GeneralsVS[l].kills =0;
                     $scope.GeneralsVS[l].deaths =0;
                 };
-
+        //for all killspam entries
         for (var i = $scope.killspam.length - 1; i >= 0; i--) {
                 var matchKiller=$scope.killspam[i].killer;
                 var matchTarget=$scope.killspam[i].target;
+        //do count if relevant
             if(($scope.lookuptable.get(matchKiller)!=null)&&($scope.lookuptable.get(matchTarget))!=null){
-                //console.log(matchKiller);
-                //console.log(matchTarget);
+
                 for (var l = $scope.Lions.length - 1; l >= 0; l--) {
                     if($scope.Lions[l].id == matchKiller) $scope.Lions[l].kills ++;
                     if($scope.Lions[l].id == matchTarget) $scope.Lions[l].deaths ++;
@@ -299,13 +315,18 @@ angular.module('statelessScoreboardApp')
     addBlueLions();
     addGeneralsTR();
     addGeneralsVS();
-    //addOutfitToIndex();
+    UpdateScoreboard();
+
+    var everthingDone = function(){
+        if (buildingLookuptable.lionsDone&& buildingLookuptable.generalsvs && buildingLookuptable.generalstr){
+            getScoreData($scope.GeneralsFilter);
+        }
+    }
 
     $interval(function(){
         console.log("Going for new loop "+ new Date());
-        UpdateScoreboard();
         getScoreData($scope.GeneralsFilter);
     }
-    ,5000);
+    ,2000);
 });
 
