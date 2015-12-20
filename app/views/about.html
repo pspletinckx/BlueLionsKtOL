@@ -1,10 +1,32 @@
-<p>Not much to see on this screen. My name is Captain Bullet0Storm, if you have any questions please do ask me, on our forums.</p>
-<p>signed Bullet0Storm {{bullet.character_id}}</p>
+<form>
+	<h2>Config section</h2>
+	<h3>Match settings</h3>
+	<fieldset class="form-inline">
+		<label  for= "startTime">Starts At</label>
+		<input type="datetime" class="form-control" placeholder="StartTime" id= "startTime"></input>
+		<label>Lasts for</label>
+		<input type="range" class="form-control" placeholder="gameLength" id= "gameLength"></input>
+	</fieldset>
+	<fieldset>
+		<label>pick match type</label>
+		<select class="form-control" >
+			<option>Adversial - Kills</option>
+			<option>Adversial - Score</option>
+			<option>Cooperative - Kills</option>
+			<option>Cooperative - Kills</option>
+		</select>
+		<div class="form-group">
+			<p>Teams are in opposing factions, most kills wins, only combat within contestents counts</p>
+		</div>
 
-<h2> Lookup Table </h2>
-<ul ng-repeat="pl in players">
-	<li> {{pl.id}} {{pl.name}}
-</ul>
+	</fieldset>
+	<fieldset>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox" id="blankCheckbox" value="option1">
+				<p>Score Limit</p>
+			</label>
+		</div>
+		<input type="range"><label>100 minutes</label>
 
-<h2>{{weaponId}}</h2>
-<h2>{{weaponName}}</h2>
+	</fieldset>

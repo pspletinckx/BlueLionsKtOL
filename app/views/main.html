@@ -32,7 +32,7 @@
   <table class = "table" >
     <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'|filter:onlyRelevant">
 <!--       <tr ng-show="{{lookuptable.get(record.killer).length&&lookuptable.get(record.target).length}}"> -->
-       <tr> <td>{{$index}}</td> <td> {{record.time+"000"| date:'short'}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
+       <tr> <td>{{$index}}</td> <td> {{record.time+"000"|date: "d MMM yyyy@ H'h'mm ss "}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
     </tbody>
    
   </table> 
