@@ -1,5 +1,26 @@
 
 <!-- ng repeat for team A -->
+<div class="row">
+	<div class ="col-sm-12">
+		<div ng-repeat="m in allMatches" class="row">
+			<div class="col-xs-5">
+				<ul class ="nav">
+					<li ng-repeat="o in m.players.team[0].outfits" class="text-right"><h3>{{o.name}}</h3></li>
+					<li class="text-right"> <p ng-repeat="s in m.players.team[0].singles" >{{s.name.first}}</p></li>	
+				</ul>
+			</div>
+			<div class="col-xs-2"><h2 class="text-center"> VS </h2></div>
+			<div class="col-xs-5">
+				<ul class="nav">
+					<li ng-repeat="o in m.players.team[1].outfits" class="text-left"><h3>{{o.name}}</h3></li>	
+				</ul>
+			</div>
+
+</div>
+<div class="col-xs-12 well">
+<button class="btn btn-primary" ng-click="addMatchToList()">Add match to list</button>
+<button class="btn btn-warning" ng-click="reset()">Reset</button>
+</div>
 <div class= "col-sm-6">
 	<div class="well">
 		<h2>Team A</h2>
@@ -8,16 +29,18 @@
 			<li ng-repeat="an in getOutfits('a')">{{an.name}}</li>
 		</ul>
 		<!-- input field team A -->
-		<div class="form-group">
-			<label>Add an outfit</label>
-			<input  name="" ng-model="newa" placeholder="TAG" required md-maxlength="4"></input>
-			<button class="btn btn-success " ng-click="addOutfit('a',newa)">add</button>
-		</div>
-		<div class="form-group">
-			<label>Add a player</label>
-			<input name="" ng-model="npa" placeholder="Bullet0Storm" ></input>
-			<button class="btn btn-success" ng-click="addPlayer('a',npa)">add</button>
-		</div>
+		<form name="teamA" novalidate>
+			<div class="form-group">
+				<label>Add an outfit</label>
+				<input  name="outfit" ng-model="newa" placeholder="TAG" minLength="1" maxLength="4" required></input>
+				<button type= "submit" value ="Submit" class="btn btn-success " ng-click="addOutfit('a',newa);newa=''" ng-disabled="teamA.outfit.$invalid">add</button>
+			</div>
+			<div class="form-group">
+				<label>Add a player</label>
+				<input name="player" ng-model="npa" placeholder="Bullet0Storm" required ></input>
+				<button class="btn btn-success" ng-click="addPlayer('a',npa);npa=''" ng-disabled="teamA.player.$invalid">add</button>
+			</div>
+		</form>
 
 		<ul class ="nav">
 			<li ng-repeat="am in getCharacters('a')">{{am.name.first}}</li>
@@ -33,17 +56,19 @@
 		<ul class="nav">
 			<li ng-repeat="bn in getOutfits('b')">{{bn.name}}</li>
 		</ul>
-		<!-- input field team A -->
-		<div class="form-group">
-			<label>Add an outfit</label>
-			<input name="" ng-model="newb" placeholder="TAG" required md-maxlength="4">
-			<button class="btn btn-success" ng-click="addOutfit('b',newb)">add</button>
-		</div>
-		<div class="form-group">
-			<label>Add a player</label>
-			<input name="" ng-model="npb" placeholder="Bullet0Storm"></input>
-			<button class="btn btn-success" ng-click="addPlayer('b',npb)">add</button>
-		</div>
+		<!-- input field team B -->
+		<form name="teamB" novalidate>
+			<div class="form-group">
+				<label>Add an outfit</label>
+				<input name="outfit" ng-model="newb" placeholder="TAG" required maxlength="4">
+				<button class="btn btn-success" ng-click="addOutfit('b',newb);newb=''" ng-disabled="teamB.outfit.$invalid">add</button>
+			</div>
+			<div class="form-group">
+				<label>Add a player</label>
+				<input name="player" ng-model="npb" placeholder="Bullet0Storm" required></input>
+				<button class="btn btn-success" ng-click="addPlayer('b',npb);npb=''" ng-disabled="teamB.player.$invalid">add</button>
+			</div>
+		</form>
 
 		<ul class ="nav">
 			<li ng-repeat="am in getCharacters('b')">{{am.name.first}}</li>

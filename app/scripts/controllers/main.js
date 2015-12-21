@@ -327,6 +327,6 @@ angular.module('statelessScoreboardApp')
         console.log("Going for new loop "+ new Date());
         getScoreData($scope.GeneralsFilter);
     }
-    ,1000);
+    ,5000);
 });
 
