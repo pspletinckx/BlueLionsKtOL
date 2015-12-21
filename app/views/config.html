@@ -1,0 +1,54 @@
+
+<!-- ng repeat for team A -->
+<div class= "col-sm-6">
+	<div class="well">
+		<h2>Team A</h2>
+		<h4>Strength: {{getStrength('a')}}</h4>
+		<ul class ="nav">
+			<li ng-repeat="an in getOutfits('a')">{{an.name}}</li>
+		</ul>
+		<!-- input field team A -->
+		<div class="form-group">
+			<label>Add an outfit</label>
+			<input  name="" ng-model="newa" placeholder="TAG" required md-maxlength="4"></input>
+			<button class="btn btn-success " ng-click="addOutfit('a',newa)">add</button>
+		</div>
+		<div class="form-group">
+			<label>Add a player</label>
+			<input name="" ng-model="npa" placeholder="Bullet0Storm" ></input>
+			<button class="btn btn-success" ng-click="addPlayer('a',npa)">add</button>
+		</div>
+
+		<ul class ="nav">
+			<li ng-repeat="am in getCharacters('a')">{{am.name.first}}</li>
+		</ul>
+
+	</div>
+</div>
+
+<div class= "col-sm-6">
+	<div class="well">
+		<h2>Team B</h2>
+		<h4>Strength: {{getStrength('b')}}</h4>
+		<ul class="nav">
+			<li ng-repeat="bn in getOutfits('b')">{{bn.name}}</li>
+		</ul>
+		<!-- input field team A -->
+		<div class="form-group">
+			<label>Add an outfit</label>
+			<input name="" ng-model="newb" placeholder="TAG" required md-maxlength="4">
+			<button class="btn btn-success" ng-click="addOutfit('b',newb)">add</button>
+		</div>
+		<div class="form-group">
+			<label>Add a player</label>
+			<input name="" ng-model="npb" placeholder="Bullet0Storm"></input>
+			<button class="btn btn-success" ng-click="addPlayer('b',npb)">add</button>
+		</div>
+
+		<ul class ="nav">
+			<li ng-repeat="am in getCharacters('b')">{{am.name.first}}</li>
+		</ul>
+
+	</div>
+</div>
+
