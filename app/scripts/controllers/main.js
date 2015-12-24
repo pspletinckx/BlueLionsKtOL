@@ -8,8 +8,12 @@
  * Controller of the statelessScoreboardApp
  */
 angular.module('statelessScoreboardApp')
-  .controller('MainCtrl', function ($scope,$http,$interval, $filter,daybreakOutfits) {
+  .controller('MainCtrl', function ($scope,$http,$interval, $filter,daybreakOutfits, planetsails) {
   	///presentation
+    $scope.allMatches = [];
+    $scope.allMatches= planetsails.match.query({"limit":5});
+    $scope.thisMatch= $scope.allMatches[0];
+
     $scope.matchStatusEN = [
       'Ready to start',
       'Ongoing',

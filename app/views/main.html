@@ -1,3 +1,18 @@
+<div ng-repeat="m in allMatches" class="row">
+      <div class="col-xs-5">
+        <ul class ="nav">
+          <li ng-repeat="o in m.players.team[0].outfits" class="text-right"><h3>{{o.name}}</h3></li>
+          <li class="text-right"> <p ng-repeat="s in m.players.team[0].singles" >{{s.name.first}}</p></li>  
+        </ul>
+      </div>
+      <div class="col-xs-2"><h2 class="text-center"> VS </h2></div>
+      <div class="col-xs-5">
+        <ul class="nav">
+          <li ng-repeat="o in m.players.team[1].outfits" class="text-left"><h3>{{o.name}}</h3></li> 
+        </ul>
+      </div>
+</div>
+
 <div class="well">
 <h3>Next match: {{match.start+"000"| date:'d MMM y'}}</h3> 
 <h1>Match Status: {{matchStatus}}</h1>
@@ -5,9 +20,12 @@
 </div>
 
 
-<div class="col-sm-6 col-md-3 col-xs-offset-0"> <!-- begin left Column -->
+<div><div class="col-sm-6 col-md-3 col-xs-offset-0"> <!-- begin left Column -->
   <h2>Team A</h2>
-<div class="well">
+  <team ng-repeat="o in allMatches[2].players.team[0].outfits" side="A" outfit="{{o.alias}}"></team>
+
+
+<!-- <div class="well">
   <h2>{{teamNameA}}  {{ScoreGenerals}}</h2>
   <table class="table">
     <thead><th>Team A</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
@@ -16,6 +34,7 @@
     </tbody>
   </table>
 </div>
+
 <div class="well">
   <h2>{{teamNameA}}  {{ScoreGenerals}}</h2>
   <table class="table">
@@ -24,7 +43,7 @@
       <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
     </tbody>
   </table>
-</div>
+</div> -->
 </div> <!-- end leftColumn -->
 
 
@@ -40,7 +59,8 @@
 
 <div class ="col-sm-6 col-md-3 col-xs-offset-0"> 
   <h2>Team B</h2>
-<div class="well ">
+ <team ng-repeat="o in allMatches[2].players.team[1].outfits" side="A" outfit="{{o.alias}}"></team>
+<!-- <div class="well ">
   <h2>{{teamNameB}}  {{ScoreLions}}</h2>
   <table class="table">
     <thead><th>Team B</th><th>{{getTotal("killsB")}}</th><th>{{getTotal("deathsB")}}</th></thead>
@@ -49,7 +69,7 @@
     </tbody>
   </table>
 </div>
-</div>
+</div> --></div>
 <div class = "row">
   <div class="col-xs-12"> 
   <h2> Debug 1: Lookup Table</h2>
