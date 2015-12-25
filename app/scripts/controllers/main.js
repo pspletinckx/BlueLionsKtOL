@@ -12,7 +12,26 @@ angular.module('statelessScoreboardApp')
   	///presentation
     $scope.allMatches = [];
     $scope.allMatches= planetsails.match.query({"limit":5});
-    $scope.thisMatch= $scope.allMatches[0];
+    $scope.thisMatch = $scope.allMatches[0];
+    $scope.selectedMatch ={};
+
+
+    $scope.selectMatch = function(integer){
+        $scope.selectedMatch = $scope.allMatches[integer];
+    }
+
+        $scope.getCharacters = function(n){
+      var allCharacters=[];
+      if(n=='a') var i = 0;
+      if(n=='b') var i = 1;
+      var team = $scope.selectedMatch.players.team[i];
+
+      for (var j = team.outfits.length - 1; j >= 0; j--) {
+        allCharacters.push.apply(allCharacters,team.outfits[j].members);
+      };
+      allCharacters.push.apply(allCharacters,team.singles);
+      return allCharacters;
+    }
 
     $scope.matchStatusEN = [
       'Ready to start',

@@ -58,6 +58,12 @@ body {
 .marketing p + h4 {
   margin-top: 28px;
 }
+.matchHeader {
+  background-color: lightblue;
+}
+.matchlist>div:nth-child(even){
+  background-color:lightgrey;
+}
 
 
 /* Responsive: Portrait tablets and up */

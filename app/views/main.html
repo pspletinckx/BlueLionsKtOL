@@ -1,49 +1,55 @@
-<div ng-repeat="m in allMatches" class="row">
-      <div class="col-xs-5">
-        <ul class ="nav">
-          <li ng-repeat="o in m.players.team[0].outfits" class="text-right"><h3>{{o.name}}</h3></li>
-          <li class="text-right"> <p ng-repeat="s in m.players.team[0].singles" >{{s.name.first}}</p></li>  
-        </ul>
-      </div>
-      <div class="col-xs-2"><h2 class="text-center"> VS </h2></div>
-      <div class="col-xs-5">
-        <ul class="nav">
-          <li ng-repeat="o in m.players.team[1].outfits" class="text-left"><h3>{{o.name}}</h3></li> 
-        </ul>
-      </div>
+
+<div class="matchlist">
+  <div ng-repeat="m in allMatches" class="row" ng-click="selectMatch($index)"> <!-- ng-click show match -->
+    <div class="col-xs-5 text-right">
+      <ul class ="nav">
+        <li ng-repeat="o in m.players.team[0].outfits"><h4>{{o.name}}</h4></li>
+        <li> <p ng-repeat="s0 in m.players.team[0].singles" >{{s0.name.first}}</p></li>  
+      </ul>
+    </div>
+
+    <div class="col-xs-2 text-center">
+      <h2 > VS </h2>
+    </div>
+
+    <div class="col-xs-5 text-left">
+      <ul class="nav">
+        <li ng-repeat="o in m.players.team[1].outfits"><h4>{{o.name}}</h4></li> 
+        <li> <p ng-repeat="s1 in selectedMatch.players.team[1].singles" >{{s1.name.first}}</p></li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<div class="well">
-<h3>Next match: {{match.start+"000"| date:'d MMM y'}}</h3> 
-<h1>Match Status: {{matchStatus}}</h1>
-<h2>{{gameMode}} {{clockTime|date:'H:mm:ss'}}</h2>
-</div>
+<div class=" row well matchHeader"><!--  Selected Match Information -->
+  <div class="col-xs-5 text-right">
+        <h2> Team A </h2>
+        <ul class ="nav">
+          <li ng-repeat="o in selectedMatch.players.team[0].outfits"><h3>{{o.name}}</h3></li>
+          <li class="text-right"> <p ng-repeat="s in selectedMatch.players.team[0].singles" >{{s.name.first}}</p></li>  
+        </ul>
+  </div>
+
+  <div class="col-xs-2"><h2 class="text-center"> VS </h2>
+  </div>
+
+  <div class="col-xs-5 text-left">
+    <h2> Team B </h2>
+    <ul class="nav">
+      <li ng-repeat="o in selectedMatch.players.team[1].outfits"><h3>{{o.name}}</h3></li> 
+      <li> <p ng-repeat="s in selectedMatch.players.team[1].singles" >{{s.name.first}}</p></li>
+    </ul>
+  </div>
+</div> <!-- End Selected Match Information -->
 
 
 <div><div class="col-sm-6 col-md-3 col-xs-offset-0"> <!-- begin left Column -->
   <h2>Team A</h2>
+<!--   <p>All characters:</p>
+  <p ng-repeat="mA in getCharacters('a')">{{mA.name.first}}</p> -->
+
   <team ng-repeat="o in allMatches[2].players.team[0].outfits" side="A" outfit="{{o.alias}}"></team>
 
-
-<!-- <div class="well">
-  <h2>{{teamNameA}}  {{ScoreGenerals}}</h2>
-  <table class="table">
-    <thead><th>Team A</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
-    <tbody ng-repeat="player in GeneralsTR">
-      <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
-    </tbody>
-  </table>
-</div>
-
-<div class="well">
-  <h2>{{teamNameA}}  {{ScoreGenerals}}</h2>
-  <table class="table">
-    <thead><th>Team A</th><th>{{getTotal("killsA")}}</th><th>{{getTotal("deathsA")}}</th></thead>
-    <tbody ng-repeat="player in GeneralsVS">
-      <tr><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
-    </tbody>
-  </table>
-</div> -->
 </div> <!-- end leftColumn -->
 
 
@@ -53,23 +59,13 @@
 <!--       <tr ng-show="{{lookuptable.get(record.killer).length&&lookuptable.get(record.target).length}}"> -->
        <tr> <td>{{$index}}</td> <td> {{record.time+"000"|date: "d MMM yyyy@ H'h'mm ss "}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
     </tbody>
-   
   </table> 
 </div> <!-- end center Scoreboard -->
-
 <div class ="col-sm-6 col-md-3 col-xs-offset-0"> 
   <h2>Team B</h2>
  <team ng-repeat="o in allMatches[2].players.team[1].outfits" side="A" outfit="{{o.alias}}"></team>
-<!-- <div class="well ">
-  <h2>{{teamNameB}}  {{ScoreLions}}</h2>
-  <table class="table">
-    <thead><th>Team B</th><th>{{getTotal("killsB")}}</th><th>{{getTotal("deathsB")}}</th></thead>
-    <tbody ng-repeat="player in getLions() | orderBy:'-kills'">
-      <tr ng-show="playerMatters(player)"><td>{{player.name}}</td><td>{{player.kills}}</td><td>{{player.deaths}}</td></tr>
-    </tbody>
-  </table>
 </div>
-</div> --></div>
+
 <div class = "row">
   <div class="col-xs-12"> 
   <h2> Debug 1: Lookup Table</h2>
@@ -86,4 +82,6 @@
 <h2> Refactoring....</h2>
 <team side="A" outfit="CBL"></team>
 <team side="A" outfit="ABL"></team>
+
+<p> {{allMatches}}</p>
 <!-- <team side="B" outfit="BL"></team> -->
