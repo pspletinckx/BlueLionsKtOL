@@ -51,13 +51,16 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows)
     browsers: [
-      'PhantomJS'
+      //'PhantomJS',
+      'Firefox'
     ],
 
     // Which plugins to enable
     plugins: [
+      'karma-firefox-launcher',
       'karma-phantomjs-launcher',
-      'karma-jasmine'
+      'karma-jasmine',
+      'karma-jasmine-html-reporter-livereload'
     ],
 
     // Continuous Integration mode
@@ -65,6 +68,8 @@ module.exports = function(config) {
     singleRun: false,
 
     colors: true,
+
+    //reporters: ['html'],
 
     // level of logging
     // possible values: LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG

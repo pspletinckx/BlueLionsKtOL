@@ -8,19 +8,34 @@
  * Factory in the statelessScoreboardApp.
  */
 angular.module('statelessScoreboardApp')
-  .factory('Match', function () {
+  .factory('Match',['Team', function (Team) {
     
+
+    // function Match(){
+    //   this.players = {
+    //     team:[{//team could be an object
+    //       outfits:[],
+    //       singles:[]
+    //     },
+    //     {
+    //       outfits:[],
+    //       singles:[]
+    //     }]};
+    // }
 
     function Match(){
       this.players = {
-        team:[{//team could be an object
-          outfits:[],
-          singles:[]
-        },
-        {
-          outfits:[],
-          singles:[]
-        }]};
+        team:[
+        new Team(),
+        new Team()
+        ]
+      }
+    }
+
+    function Match(teamA,teamB){
+      this.players = {
+        team : [teamA, teamB]
+      };
     }
 
 
@@ -44,4 +59,4 @@ angular.module('statelessScoreboardApp')
 
         return Match;
  
-  });
+  }]);

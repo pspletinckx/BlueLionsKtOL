@@ -22,6 +22,13 @@ angular.module('statelessScoreboardApp')
             method: "JSONP",
             url: 'http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/character/?name.first_lower='+fullNameLower+'&callback=JSON_CALLBACK'
           });
+        },
+        killspam : function(playerids, timestamp){
+          if (!timestamp) timestamp  = "1433116800";
+          return $http({
+            method : "JSONP",
+            url : 'http://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/characters_event/?character_id='+playerids+'&c:limit=1000&type=DEATH,KILL&after='+timestamp+'&callback=JSON_CALLBACK'
+          })
         }
       }
   });

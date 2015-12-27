@@ -64,6 +64,10 @@ body {
 .matchlist>div:nth-child(even){
   background-color:lightgrey;
 }
+.table td {                 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+}
 
 
 /* Responsive: Portrait tablets and up */

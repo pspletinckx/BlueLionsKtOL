@@ -11,9 +11,9 @@ describe('Filter: noPugs', function () {
     noPugs = $filter('noPugs');
   }));
 
-  it('should return the input prefixed with "noPugs filter:"', function () {
-    var text = 'angularjs';
-    expect(noPugs(text)).toBe('noPugs filter: ' + text);
-  });
+  // it('should return the input prefixed with "noPugs filter:"', function () {
+  //   var text = 'angularjs';
+  //   expect(noPugs(text)).toBe('noPugs filter: ' + text);
+  // });
 
 });

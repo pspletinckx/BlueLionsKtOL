@@ -11,16 +11,28 @@ angular.module('statelessScoreboardApp')
   .controller('MainCtrl', function ($scope,$http,$interval, $filter,daybreakOutfits, planetsails) {
   	///presentation
     $scope.allMatches = [];
-    $scope.allMatches= planetsails.match.query({"limit":5});
+    $scope.allMatches= planetsails.match.query({"limit":5},function(){
+        selectMatch(0);
+        $scope.update27dec();
+    });
     $scope.thisMatch = $scope.allMatches[0];
-    $scope.selectedMatch ={};
+    $scope.selectedMatch;
 
 
     $scope.selectMatch = function(integer){
         $scope.selectedMatch = $scope.allMatches[integer];
+        addKd();
+        $scope.update27dec();
     }
 
-        $scope.getCharacters = function(n){
+    var selectMatch = function(integer){
+        $scope.selectedMatch = $scope.allMatches[integer];
+        addKd();
+        $scope.update27dec();
+    }
+
+    $scope.getCharacters = function(n){
+        if (!$scope.selectedMatch) return [];
       var allCharacters=[];
       if(n=='a') var i = 0;
       if(n=='b') var i = 1;
@@ -32,6 +44,53 @@ angular.module('statelessScoreboardApp')
       allCharacters.push.apply(allCharacters,team.singles);
       return allCharacters;
     }
+
+    var getStrength=function(n){
+      return $scope.getCharacters(n).length;
+    }
+    $scope.getStrength = getStrength;
+
+    var addKd = function(){
+        var addFields = function (chars){
+            for (var i = chars.length - 1; i >= 0; i--) {
+                chars[i].deaths = 0;
+                chars[i].kills= 0;
+            };
+        }
+        var Achars = $scope.getCharacters('a');
+        var Bchars = $scope.getCharacters('b');
+        addFields(Achars);
+        addFields(Bchars);
+    }
+
+    //init
+    $scope.init =function(){
+        $scope.selectedMatch(0);
+        $scope.addKd();
+    };
+
+    $scope.update27dec = function(){
+            var scores;
+            var playerIdString="";
+            var playerids;
+        if(getStrength('a') <= getStrength('b')){
+            playerids = $scope.getCharacters('a');  }
+        else {
+            playerids = $scope.getCharacters('b');  }
+        for (var i = playerids.length - 1; i >= 0; i--) {
+                if(!playerids[i].character_id) return;
+                playerIdString += playerids[i].character_id;
+                if(i!=0) playerIdString += ",";
+            };
+                console.log("connectionstring : "+ playerIdString);
+            daybreakOutfits.killspam(playerIdString).then(
+                function(data){
+                        console.log(data);
+                });
+    }
+
+    //OLD IMPLEMENTATION
+
 
     $scope.matchStatusEN = [
       'Ready to start',
@@ -346,10 +405,10 @@ angular.module('statelessScoreboardApp')
         }
     }
 
-    $interval(function(){
-        console.log("Going for new loop "+ new Date());
-        getScoreData($scope.GeneralsFilter);
-    }
-    ,5000);
+    // $interval(function(){
+    //     console.log("Going for new loop "+ new Date());
+    //     getScoreData($scope.GeneralsFilter);
+    // }
+    // ,5000);
 });
 

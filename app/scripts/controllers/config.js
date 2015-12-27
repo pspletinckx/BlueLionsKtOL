@@ -14,6 +14,7 @@ angular.module('statelessScoreboardApp')
 
     //put this in a provider
     $scope.statusMessage ="";
+    
     $scope.match = {
       players:{
         team:[{
@@ -101,6 +102,12 @@ angular.module('statelessScoreboardApp')
         },
         matchMeta:{}
       }
+    }
+    $scope.deleteLast = function(){
+      var lastNbr = $scope.allMatches.length - 1;
+      planetsails.match.delete({id:$scope.allMatches[lastNbr].id},function(){
+        $scope.getAllMatches();
+      });
     }
 
     $scope.getAllMatches();

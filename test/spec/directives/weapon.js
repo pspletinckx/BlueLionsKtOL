@@ -12,9 +12,9 @@ describe('Directive: weapon', function () {
     scope = $rootScope.$new();
   }));
 
-  it('should make hidden element visible', inject(function ($compile) {
-    element = angular.element('<weapon></weapon>');
-    element = $compile(element)(scope);
-    expect(element.text()).toBe('this is the weapon directive');
-  }));
+  // it('should make hidden element visible', inject(function ($compile) {
+  //   element = angular.element('<weapon></weapon>');
+  //   element = $compile(element)(scope);
+  //   expect(element.text()).toBe('this is the weapon directive');
+  // }));
 });

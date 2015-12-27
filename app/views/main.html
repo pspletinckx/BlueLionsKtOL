@@ -43,17 +43,38 @@
 </div> <!-- End Selected Match Information -->
 
 
-<div><div class="col-sm-6 col-md-3 col-xs-offset-0"> <!-- begin left Column -->
+
+
+
+
+
+
+
+<div><div class="col-sm-6 col-md-4 col-xs-offset-0 text-right "> <!-- begin left Column -->
   <h2>Team A</h2>
 <!--   <p>All characters:</p>
   <p ng-repeat="mA in getCharacters('a')">{{mA.name.first}}</p> -->
 
-  <team ng-repeat="o in allMatches[2].players.team[0].outfits" side="A" outfit="{{o.alias}}"></team>
-
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Deaths</th>
+        <th>Kills</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tr ng-repeat="mA in getCharacters('a')">
+      <td>{{mA.deaths}}</td>
+      <td>{{mA.kills}}</td>
+      <td>{{mA.name.first}}</td>
+    </tr>
+  </table>
+  <!-- <team ng-repeat="o in allMatches[2].players.team[0].outfits" side="A" outfit="{{o.alias}}"></team> -->
 </div> <!-- end leftColumn -->
 
 
-<div class="well col-sm-6 hidden-sm col-xs-offset-0"> <!-- begin center Scoreboard -->
+
+<div class="well col-md-4 hidden-sm col-xs-offset-0"> <!-- begin center Scoreboard -->
   <table class = "table" >
     <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'|filter:onlyRelevant">
 <!--       <tr ng-show="{{lookuptable.get(record.killer).length&&lookuptable.get(record.target).length}}"> -->
@@ -61,12 +82,29 @@
     </tbody>
   </table> 
 </div> <!-- end center Scoreboard -->
-<div class ="col-sm-6 col-md-3 col-xs-offset-0"> 
-  <h2>Team B</h2>
- <team ng-repeat="o in allMatches[2].players.team[1].outfits" side="A" outfit="{{o.alias}}"></team>
-</div>
 
-<div class = "row">
+
+<div class ="col-sm-6 col-md-4 col-xs-offset-0"> <!-- begin right column -->
+  <h2>Team B</h2>
+ <!-- <team ng-repeat="o in allMatches[2].players.team[1].outfits" side="A" outfit="{{o.alias}}"></team> -->
+ <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Kills</th>
+        <th>Deaths</th>
+      </tr>
+    </thead>
+    <tr ng-repeat="mA in getCharacters('b')">
+      <td>{{mA.name.first}}</td>
+      <td>{{mA.kills}}</td>
+      <td>{{mA.deaths}}</td>
+    </tr>
+  </table>
+
+</div> <!-- end right column -->
+
+<!-- <div class = "row">
   <div class="col-xs-12"> 
   <h2> Debug 1: Lookup Table</h2>
   <p>{{lookuptable.get(5428010618035982689)}}</p>
@@ -78,10 +116,11 @@
   <div class="col-xs-12">
     <h2>Debug 2: Kill History</h2>
   </div>
-</div>
-<h2> Refactoring....</h2>
-<team side="A" outfit="CBL"></team>
-<team side="A" outfit="ABL"></team>
+</div> -->
 
-<p> {{allMatches}}</p>
+<!-- <h2> Refactoring....</h2>
+<team side="A" outfit="CBL"></team>
+<team side="A" outfit="ABL"></team> -->
+
+<!-- <p> {{allMatches}}</p> -->
 <!-- <team side="B" outfit="BL"></team> -->
