@@ -50,7 +50,7 @@
 
 
 
-<div><div class="col-sm-6 col-md-4 col-xs-offset-0 text-right "> <!-- begin left Column -->
+<div><div class="col-sm-6 col-md-3 col-xs-offset-0 text-right "> <!-- begin left Column -->
   <h2>Team A</h2>
 <!--   <p>All characters:</p>
   <p ng-repeat="mA in getCharacters('a')">{{mA.name.first}}</p> -->
@@ -63,7 +63,7 @@
         <th></th>
       </tr>
     </thead>
-    <tr ng-repeat="mA in getCharacters('a')">
+    <tr ng-animate="'animate'" ng-repeat="mA in getCharacters('a')| orderBy : '-kills'">
       <td>{{mA.deaths}}</td>
       <td>{{mA.kills}}</td>
       <td>{{mA.name.first}}</td>
@@ -74,11 +74,17 @@
 
 
 
-<div class="well col-md-4 hidden-sm col-xs-offset-0"> <!-- begin center Scoreboard -->
+<div class="well col-md-5 hidden-sm col-xs-offset-0"> <!-- begin center Scoreboard -->
   <table class = "table" >
     <tbody ng-repeat="record in getKillSpam() | orderBy:'-time'|filter:onlyRelevant">
 <!--       <tr ng-show="{{lookuptable.get(record.killer).length&&lookuptable.get(record.target).length}}"> -->
-       <tr> <td>{{$index}}</td> <td> {{record.time+"000"|date: "d MMM yyyy@ H'h'mm ss "}}</td><td>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </td></tr>
+       <tr> <!-- <td>{{$index}}</td> --> 
+        <!-- <td> {{record.time+"000"|date: "d MMM yyyy@ H'h'mm ss "}}</td> -->
+        <td>
+          <p>{{record.time+"000"|date: "d MMM yyyy@ H'h'mm ss "}}</p>
+          <p>{{lookuptable.get(record.killer)}} has killed {{lookuptable.get(record.target)}} with a <weapon nr="{{record.weapon}}"></weapon> </p>
+
+        </td></tr>
     </tbody>
   </table> 
 </div> <!-- end center Scoreboard -->
@@ -95,10 +101,10 @@
         <th>Deaths</th>
       </tr>
     </thead>
-    <tr ng-repeat="mA in getCharacters('b')">
-      <td>{{mA.name.first}}</td>
-      <td>{{mA.kills}}</td>
-      <td>{{mA.deaths}}</td>
+    <tr ng-animate="'animate'" ng-repeat="mB in getCharacters('b') |orderBy : '-kills'">
+      <td>{{mB.name.first}}</td>
+      <td>{{mB.kills}}</td>
+      <td>{{mB.deaths}}</td>
     </tr>
   </table>
 

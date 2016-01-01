@@ -10,7 +10,7 @@
 angular.module('statelessScoreboardApp')
   .factory('planetsails',['$resource', function ($resource) {
         return{
-      loadout: $resource("http://localhost:1337/loadout/:id",{},{}),
-      match: $resource("http://localhost:1337/match/:id",{},{})
+      loadout: $resource("http://sails-pspletinckx.rhcloud.com/loadout/:id",{},{}),
+      match: $resource("http://sails-pspletinckx.rhcloud.com/match/:id",{},{})
     };
   }]);

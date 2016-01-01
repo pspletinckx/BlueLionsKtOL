@@ -14,6 +14,11 @@ angular.module('statelessScoreboardApp')
       link: function postLink(scope, element, attrs) {
         //element.text(attrs.nr);
        // console.log(attrs.nr);
+       if (attrs.nr == 0){
+         element.text("weapon");
+         return;
+       }
+
       daybreakItems.itemName(attrs.nr)
       .success(function(data){
       	if(data.item_list.length>0){

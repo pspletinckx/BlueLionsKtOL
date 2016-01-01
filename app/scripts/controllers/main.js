@@ -9,26 +9,35 @@
  */
 angular.module('statelessScoreboardApp')
   .controller('MainCtrl', function ($scope,$http,$interval, $filter,daybreakOutfits, planetsails) {
-  	///presentation
+    ///presentation
     $scope.allMatches = [];
     $scope.allMatches= planetsails.match.query({"limit":5},function(){
         selectMatch(0);
-        $scope.update27dec();
+        $scope.teamsLookupTable();
     });
     $scope.thisMatch = $scope.allMatches[0];
     $scope.selectedMatch;
+    $scope.killspam = [];
 
+    $scope.lookuptableTeamA = new Map();
+    $scope.lookuptableTeamB = new Map();
+            var timestamp = 1451264432; //matchstart
+
+        $scope.lookuptable = new Map ([
+        [5428010618035982689,"Bullet0Storm"]
+    ]);
 
     $scope.selectMatch = function(integer){
-        $scope.selectedMatch = $scope.allMatches[integer];
-        addKd();
-        $scope.update27dec();
+        selectMatch(integer);
     }
 
     var selectMatch = function(integer){
         $scope.selectedMatch = $scope.allMatches[integer];
         addKd();
         $scope.update27dec();
+        $scope.teamsLookupTable();
+        $scope.lookuptableTeamA = new Map();
+        $scope.lookuptableTeamB = new Map();
     }
 
     $scope.getCharacters = function(n){
@@ -83,15 +92,79 @@ angular.module('statelessScoreboardApp')
                 if(i!=0) playerIdString += ",";
             };
                 console.log("connectionstring : "+ playerIdString);
-            daybreakOutfits.killspam(playerIdString).then(
-                function(data){
-                        console.log(data);
-                });
+            daybreakOutfits.killspam(playerIdString, timestamp).then(
+                function(response){
+                        console.log(response.data);
+                        var events = response.data.characters_event_list;
+                        for (var i = events.length - 1; i >= 0; i--) {
+                            if (events[i].timestamp>timestamp) timestamp = events[i].timestamp;
+                            $scope.killspam.push(
+                                {
+                                    time:events[i].timestamp,
+                                    killer:events[i].attacker_character_id,
+                                    target:events[i].character_id,
+                                    weapon:events[i].attacker_weapon_id
+                                });
+                            // if(($scope.lookuptable.get(events[i].attacker_character_id)!=null)&&($scope.lookuptable.get(events[i].character_id))!=null){
+                            //     if(events[i].table_type=="kills") $scope.ScoreGenerals +=1;
+                            //     if(events[i].table_type=="deaths") $scope.ScoreLions ++;
+                            // };
+                            
+                        };
+                        updateTheScoreboard();
+                });  
+    }
+
+    $scope.teamsLookupTable = function(){
+        var charsA = $scope.getCharacters('a');
+        for (var i = charsA.length - 1; i >= 0; i--) {
+            var member = charsA[i];
+            if (member.name!=null){
+                $scope.lookuptableTeamA.set(member.character_id, member.name.first);
+            }
+        };
+        var charsB = $scope.getCharacters('b');
+        for (var i = charsB.length - 1; i >= 0; i--) {
+            var member = charsB[i];
+            if (member.name !=null){
+                $scope.lookuptableTeamB.set(member.character_id, member.name.first);
+            }
+        };      
+    }
+    var updateTheScoreboard = function(){
+        for (var l = $scope.getCharacters('a').length - 1; l >= 0; l--) {
+                    $scope.getCharacters('a')[l].kills =0;
+                    $scope.getCharacters('a')[l].deaths =0;}
+        for (var l = $scope.getCharacters('b').length - 1; l >= 0; l--) {
+                    $scope.getCharacters('b')[l].kills =0;
+                    $scope.getCharacters('b')[l].deaths =0;}
+
+
+
+
+                for (var i = $scope.killspam.length - 1; i >= 0; i--) {
+                var matchKiller=$scope.killspam[i].killer;
+                var matchTarget=$scope.killspam[i].target;
+        //do count if relevant
+            if ( $scope.lookuptableTeamA.has(matchKiller)&&$scope.lookuptableTeamB.has(matchTarget)|| 
+                    $scope.lookuptableTeamB.has(matchKiller)&&$scope.lookuptableTeamA.has(matchTarget)){
+
+                for (var l = $scope.getCharacters('a').length - 1; l >= 0; l--) {
+                    if($scope.getCharacters('a')[l].character_id == matchKiller) $scope.getCharacters('a')[l].kills ++;
+                    if($scope.getCharacters('a')[l].character_id == matchTarget) $scope.getCharacters('a')[l].deaths ++;
+                };
+
+                for (var l = $scope.getCharacters('b').length - 1; l >= 0; l--) {
+                    if($scope.getCharacters('b')[l].character_id == matchKiller) $scope.getCharacters('b')[l].kills ++;
+                    if($scope.getCharacters('b')[l].character_id == matchTarget) $scope.getCharacters('b')[l].deaths ++;
+                };
+            };
+
+        };
+
     }
 
     //OLD IMPLEMENTATION
-
-
     $scope.matchStatusEN = [
       'Ready to start',
       'Ongoing',
@@ -125,33 +198,32 @@ angular.module('statelessScoreboardApp')
     //logic for team totals
 
     $scope.getTotal = function(stat){ //totals compiler
-    	var total = 0;
-    	switch(stat){
-    		case "killsA":
-    		{for(var i = 0; i < $scope.teamA.length; i++){
-	        var player = $scope.teamA[i];
-	        total += player.kills;}}
-	        break;
-	        case "killsB":
-    		{for(var i = 0; i < $scope.teamB.length; i++){
-	        var player = $scope.teamB[i];
-	        total += player.kills;}}
-	        break;
-	        case "deathsA":
-    		{for(var i = 0; i < $scope.teamA.length; i++){
-	        var player = $scope.teamA[i];
-	        total += player.deaths;}}
-	        break;
-	        case "deathsB":
-    		{for(var i = 0; i < $scope.teamB.length; i++){
-	        var player = $scope.teamB[i];
-	        total += player.deaths;}}
-	        break;
-    	}
+        var total = 0;
+        switch(stat){
+            case "killsA":
+            {for(var i = 0; i < $scope.teamA.length; i++){
+            var player = $scope.teamA[i];
+            total += player.kills;}}
+            break;
+            case "killsB":
+            {for(var i = 0; i < $scope.teamB.length; i++){
+            var player = $scope.teamB[i];
+            total += player.kills;}}
+            break;
+            case "deathsA":
+            {for(var i = 0; i < $scope.teamA.length; i++){
+            var player = $scope.teamA[i];
+            total += player.deaths;}}
+            break;
+            case "deathsB":
+            {for(var i = 0; i < $scope.teamB.length; i++){
+            var player = $scope.teamB[i];
+            total += player.deaths;}}
+            break;
+        }
     return total;
     };
 
-    $scope.killspam = [];
     $scope.filtered = [];
 
     $scope.getKillSpam = function(){
@@ -186,6 +258,7 @@ angular.module('statelessScoreboardApp')
     $scope.lookuptable = new Map ([
         [5428010618035982689,"Bullet0Storm"]
     ]);
+
     // For add directive
     var addBlueLions = function(){
         $http.jsonp('https://census.daybreakgames.com/s:BlueLegacy/get/ps2:v2/outfit/?outfit_id=37509488620601556&c:resolve=member_character%28name%29&callback=JSON_CALLBACK')
@@ -208,7 +281,7 @@ angular.module('statelessScoreboardApp')
             };
         };
         buildingLookuptable.lionsDone = true;
-        everthingDone();
+        // everthingDone();
     });
     };
     var addGeneralsTR = function(){
@@ -235,7 +308,7 @@ angular.module('statelessScoreboardApp')
             };
         };
         buildingLookuptable.generalstr = true;
-        everthingDone();
+        // everthingDone();
     });
     };
 
@@ -263,13 +336,14 @@ angular.module('statelessScoreboardApp')
             };
         };
         buildingLookuptable.generalsvs = true;
-        everthingDone();
+        // everthingDone();
     });
     };
 
     //scoreboard player filter
     $scope.onlyRelevant = function(value, index, array){
-                 if ( $scope.lookuptable.has(value.killer)&&$scope.lookuptable.has(value.target)){
+                 if ( $scope.lookuptableTeamA.has(value.killer)&&$scope.lookuptableTeamB.has(value.target)|| 
+                    $scope.lookuptableTeamB.has(value.killer)&&$scope.lookuptableTeamA.has(value.target)){
                 return true;
         }
         else return false;
@@ -297,6 +371,7 @@ angular.module('statelessScoreboardApp')
     //this downloads the killspam
     //also calculates overall score
     var lock = false;
+    /*
     var getScoreData = function(playerids){
         if (lock) return;
         lock=true;
@@ -332,9 +407,11 @@ angular.module('statelessScoreboardApp')
             lock = false;
         });
     };
+    */
+
     //this pushes data from the killspam to the scoreboard
     //required variables: killspam, lookuptable
-    var timestamp=0;
+    //var timestamp=0;
     var UpdateScoreboard = function(){
         //reset increment values to 0
         for (var l = $scope.Lions.length - 1; l >= 0; l--) {
@@ -398,17 +475,16 @@ angular.module('statelessScoreboardApp')
     addGeneralsTR();
     addGeneralsVS();
     UpdateScoreboard();
-
+    /*
     var everthingDone = function(){
         if (buildingLookuptable.lionsDone&& buildingLookuptable.generalsvs && buildingLookuptable.generalstr){
             getScoreData($scope.GeneralsFilter);
         }
     }
-
-    // $interval(function(){
-    //     console.log("Going for new loop "+ new Date());
-    //     getScoreData($scope.GeneralsFilter);
-    // }
-    // ,5000);
+    */
+    $interval(function(){
+        console.log("Going for new loop "+ new Date());
+        $scope.update27dec();}
+    ,5000);
 });
 
