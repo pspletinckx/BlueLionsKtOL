@@ -13,7 +13,6 @@ angular.module('statelessScoreboardApp')
     $scope.allMatches = [];
     $scope.allMatches= planetsails.match.query({"limit":5},function(){
         selectMatch(0);
-        $scope.teamsLookupTable();
     });
     $scope.thisMatch = $scope.allMatches[0];
     $scope.selectedMatch;
@@ -34,10 +33,11 @@ angular.module('statelessScoreboardApp')
     var selectMatch = function(integer){
         $scope.selectedMatch = $scope.allMatches[integer];
         addKd();
+        changeMatch();
         $scope.update27dec();
-        $scope.teamsLookupTable();
         $scope.lookuptableTeamA = new Map();
         $scope.lookuptableTeamB = new Map();
+        $scope.teamsLookupTable();
     }
 
     $scope.getCharacters = function(n){
@@ -78,6 +78,11 @@ angular.module('statelessScoreboardApp')
         $scope.addKd();
     };
 
+    var changeMatch = function(){
+        timestamp = 0;
+        $scope.killspam = [];
+    }
+
     $scope.update27dec = function(){
             var scores;
             var playerIdString="";
@@ -105,11 +110,6 @@ angular.module('statelessScoreboardApp')
                                     target:events[i].character_id,
                                     weapon:events[i].attacker_weapon_id
                                 });
-                            // if(($scope.lookuptable.get(events[i].attacker_character_id)!=null)&&($scope.lookuptable.get(events[i].character_id))!=null){
-                            //     if(events[i].table_type=="kills") $scope.ScoreGenerals +=1;
-                            //     if(events[i].table_type=="deaths") $scope.ScoreLions ++;
-                            // };
-                            
                         };
                         updateTheScoreboard();
                 });  
@@ -139,12 +139,16 @@ angular.module('statelessScoreboardApp')
                     $scope.getCharacters('b')[l].kills =0;
                     $scope.getCharacters('b')[l].deaths =0;}
 
-
-
-
                 for (var i = $scope.killspam.length - 1; i >= 0; i--) {
                 var matchKiller=$scope.killspam[i].killer;
                 var matchTarget=$scope.killspam[i].target;
+                //debug
+                if(matchKiller == "5428109895926721905") console.log("detected");
+                if(matchTarget == "5428109895926721905") console.log("detected");
+                if(matchKiller == "5428109895926721905") console.log("detected");
+                
+
+                //end debug
         //do count if relevant
             if ( $scope.lookuptableTeamA.has(matchKiller)&&$scope.lookuptableTeamB.has(matchTarget)|| 
                     $scope.lookuptableTeamB.has(matchKiller)&&$scope.lookuptableTeamA.has(matchTarget)){

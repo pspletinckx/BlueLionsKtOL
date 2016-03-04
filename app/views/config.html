@@ -1,8 +1,11 @@
 
 <!-- ng repeat for team A -->
 <div class="row">
-	<div class ="col-sm-12">
+	<div class ="col-sm-12 matchlist">
 		<div ng-repeat="m in allMatches" class="row">
+			<div class="row text-center">
+				<h4>{{m.meta.title}}<h4>
+			</div>
 			<div class="col-xs-5">
 				<ul class ="nav">
 					<li ng-repeat="o in m.players.team[0].outfits" class="text-right"><h3>{{o.name}}</h3></li>
@@ -10,19 +13,30 @@
 				</ul>
 			</div>
 			<div class="col-xs-2"><h2 class="text-center"> VS </h2></div>
-			<div class="col-xs-5">
+			<div class="col-xs-4">
 				<ul class="nav">
 					<li ng-repeat="o in m.players.team[1].outfits" class="text-left"><h3>{{o.name}}</h3></li>	
+					<li class="text-right"> <p ng-repeat="s in m.players.team[1].singles" >{{s.name.first}}</p></li>
 				</ul>
+				
 			</div>
+			<div class="col-xs-1">
+				<button class="btn" ng-click="deleteMatch(m.id)">X</button>
+			</div>
+		</div>
 
-</div>
 <div class="col-xs-12 well">
-<button class="btn btn-primary" ng-click="addMatchToList()">Add match to list</button>
-<button class="btn btn-warning" ng-click="reset()">Reset</button>
-<button class="btn btn-danger" ng-click="deleteLast()">Delete Last </button>
+	<button class="btn btn-primary" ng-click="addMatchToList()">Add match to list</button>
+	<button class="btn btn-warning" ng-click="reset()">Reset</button>
+	<button class="btn btn-danger" ng-click="deleteLast()">Delete Last </button>	
+	<span>error message</span>
 </div>
-<div class= "col-sm-6">
+<div class="well">
+	<input ng-model="match.meta.title" type="textfield" placeholder="Match Title">
+	<span>Datetime</span>
+	<span>Matchtype</span>
+</div>
+<div class= "col-sm-6"> <!-- Team A  -->
 	<div class="well">
 		<h2>Team A</h2>
 		<h4>Strength: {{getStrength('a')}}</h4>
@@ -50,7 +64,7 @@
 	</div>
 </div>
 
-<div class= "col-sm-6">
+<div class= "col-sm-6"> <!-- Team B -->
 	<div class="well">
 		<h2>Team B</h2>
 		<h4>Strength: {{getStrength('b')}}</h4>

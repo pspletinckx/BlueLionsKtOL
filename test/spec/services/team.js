@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Model: Team', function () {
+describe('Model_Team', function () {
 
   // load the service's module
   beforeEach(module('statelessScoreboardApp'));
@@ -17,20 +17,65 @@ describe('Model: Team', function () {
     expect(!!Team).toBe(true);
   });
 
-  it('Team should have a field outfits', function() {
+  describe(' field should have', function() {
+    it('outfits', function() {
     expect(team.outfits).not.toBeUndefined();
   });
 
-  it('Team should have a field singles', function() {
+  it('singles', function() {
     expect(team.singles).not.toBeUndefined();
   });
 
-  it('Team should have a getCharacters method', function() {
+  xit('should have a getCharacters method', function() {
     
   });
 
+  });
+
+  
+  describe('Team should be able to add a player', function() {
+
+    beforeEach(function(done) {
+      team.addPlayer("Bullet0Storm");
+    });
+
+    it('test should call done function', function(done) {
+      expect(team.singles.length).toBe(1);    
+      done();
+    });
+
+    xit('that makes the total players increase', function(done) {
+      expect(team.singles.length).toBe(1);
+    });
+
+    xit('With the right name', function(done) {
+      expect(team.singles[0].name.first).toBe("Bullet0Storm");
+    });
+  });
+  
+
   describe('Load Team from API', function() {
     
+  });
+
+
+
+describe("Asynchronous specs", function() {
+  var value;
+
+
+  beforeEach(function(done) {
+    setTimeout(function() {
+      value = 0;
+      done();
+    }, 1);
+  });
+
+   it("should support async execution of test preparation and expectations", function(done) {
+      value++;
+      expect(value).toBeGreaterThan(0);
+      done();
+    });
   });
 
 });

@@ -26,13 +26,17 @@ angular.module('statelessScoreboardApp')
           singles:[]
         }]
       },
-      matchMeta:{}
+      meta:{
+        title:"Unknown",
+        author:""
+      }
     };
     //adds current match to list
     $scope.addMatchToList = function(){
       //$scope.allMatches.push($scope.match);
       var matchSails = new planetsails.match();
       matchSails.players = $scope.match.players;
+      matchSails.meta = $scope.match.meta;
       matchSails.$save().then(function(){
         $scope.getAllMatches();
       });
@@ -53,7 +57,6 @@ angular.module('statelessScoreboardApp')
   					$scope.match.players.team[1].outfits.push(resp.data.outfit_list[0]);
   				}
   			});
-
   	}
 
   	$scope.addPlayer = function(n,fullName){
@@ -106,6 +109,12 @@ angular.module('statelessScoreboardApp')
     $scope.deleteLast = function(){
       var lastNbr = $scope.allMatches.length - 1;
       planetsails.match.delete({id:$scope.allMatches[lastNbr].id},function(){
+        $scope.getAllMatches();
+      });
+    }
+
+    $scope.deleteMatch = function(matchId){
+        planetsails.match.delete({id:matchId},function(){
         $scope.getAllMatches();
       });
     }
