@@ -4,22 +4,8 @@ stages:
   - runScriptConfig:
       image: digitallyseamless/nodejs-bower-grunt
       shellScript: npm install && bower install
-    env:
-      FIRST_KEY: VALUE
-      SECOND_KEY: VALUE2
-    envFrom:
-    - sourceName: my-secret
-      sourceKey: secret-key
-      targetKey: ALIAS_ENV
 - name: Build something
   steps:
   - runScriptConfig:
       image: digitallyseamless/nodejs-bower-grunt
       shellScript: grunt build
-    env:
-      FIRST_KEY: VALUE
-      SECOND_KEY: VALUE2
-    envFrom:
-    - sourceName: my-secret
-      sourceKey: secret-key
-      targetKey: ALIAS_ENV
